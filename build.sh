@@ -1,10 +1,14 @@
 #!/bin/bash
 # Build script for Render
 
+set -e
+
 echo "Installing dependencies..."
 go mod download
 
 echo "Building application..."
-go build -o bin/app main.go
+mkdir -p bin
+go build -o bin/app .
 
 echo "Build completed!"
+ls -la bin/
