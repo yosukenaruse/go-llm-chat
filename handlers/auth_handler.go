@@ -2,21 +2,21 @@ package handlers
 
 import (
 	"go-llm-chat/models"
-	"go-llm-chat/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go-llm-chat/usecase"
 )
 
 // AuthHandler 認証ハンドラーの構造体
 type AuthHandler struct {
-	authService *services.AuthService
+	authUsecase usecase.AuthUsecase
 }
 
 // NewAuthHandler AuthHandlerのコンストラクタ
-func NewAuthHandler(authService *services.AuthService) *AuthHandler {
+func NewAuthHandler(authUsecase usecase.AuthUsecase) *AuthHandler {
 	return &AuthHandler{
-		authService: authService,
+		authUsecase: authUsecase,
 	}
 }
 
@@ -34,7 +34,7 @@ func (h *AuthHandler) HandleLogin(c *gin.Context) {
 	}
 
 	// パスワードを検証
-	err := h.authService.ValidatePassword(req.Password)
+	err := h.authUsecase.ValidatePassword(req.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, models.LoginResponse{
 			Success: false,
@@ -45,13 +45,13 @@ func (h *AuthHandler) HandleLogin(c *gin.Context) {
 
 	// 認証成功時、Cookieに認証トークンを設定
 	c.SetCookie(
-		"auth_token",        // Cookie名
-		"authenticated",     // Cookie値
-		3600*24,            // 有効期限（秒）- 24時間
-		"/",                // パス
-		"",                 // ドメイン（空文字の場合は現在のドメイン）
-		false,              // Secure（HTTPSのみ）
-		true,               // HttpOnly（JavaScriptからアクセス不可）
+		"auth_token",    // Cookie名
+		"authenticated", // Cookie値
+		3600*24,         // 有効期限（秒）- 24時間
+		"/",             // パス
+		"",              // ドメイン（空文字の場合は現在のドメイン）
+		false,           // Secure（HTTPSのみ）
+		true,            // HttpOnly（JavaScriptからアクセス不可）
 	)
 
 	// 成功レスポンスを返却

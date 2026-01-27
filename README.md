@@ -1,3 +1,9 @@
+https://go-llm-chat.onrender.com/static/login.html
+
+go mod init
+go mod tidy
+go run main.go 
+
 # go-llm-chat
 
 Go言語で実装されたLLM（Large Language Model）チャットアプリケーション

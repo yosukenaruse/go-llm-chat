@@ -1,22 +1,23 @@
 package handlers
 
 import (
+	"context"
 	"go-llm-chat/models"
-	"go-llm-chat/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go-llm-chat/usecase"
 )
 
 // ChatHandler チャットハンドラーの構造体
 type ChatHandler struct {
-	chatService *services.ChatService
+	chatUsecase usecase.ChatUsecase
 }
 
 // NewChatHandler ChatHandlerのコンストラクタ
-func NewChatHandler(chatService *services.ChatService) *ChatHandler {
+func NewChatHandler(chatUsecase usecase.ChatUsecase) *ChatHandler {
 	return &ChatHandler{
-		chatService: chatService,
+		chatUsecase: chatUsecase,
 	}
 }
 
@@ -32,8 +33,12 @@ func (h *ChatHandler) HandleChat(c *gin.Context) {
 		return
 	}
 
-	// ChatServiceを使用してレスポンスを取得
-	response, err := h.chatService.GetResponse(&req)
+	// usecaseを使用してレスポンスを取得
+	ctx := c.Request.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	response, err := h.chatUsecase.GetResponse(ctx, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get response",
