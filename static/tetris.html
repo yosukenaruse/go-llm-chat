@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Tetris - Data Managed</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #app {
+            text-align: center;
+        }
+        .game-wrapper {
+            position: relative;
+            border: 4px solid #4e4e6a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        canvas {
+            display: block;
+            background-color: #000;
+        }
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .score-board {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #00d2ff;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
+            background: #00d2ff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #33e0ff;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="score-board">SCORE: {{ score }}</div>
+    
+    <div class="game-wrapper">
+        <canvas id="tetris" ref="canvas" width="240" height="400"></canvas>
+        
+        <div v-if="gameOver" class="overlay">
+            <h1>GAME OVER</h1>
+            <button @click="resetGame">RETRY</button>
+        </div>
+    </div>
+    
+    <p style="color: #888; font-size: 0.8em; margin-top: 10px;">
+        ← → : Move / ↓ : Drop / Q,W : Rotate
+    </p>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="tetris.js"></script>
+</body>
+</html>
